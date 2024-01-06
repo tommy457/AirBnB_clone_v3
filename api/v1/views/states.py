@@ -21,9 +21,9 @@ def get_create_states():
 
         new_state = State(**data)
         new_state.save()
-    
+
         return make_response(jsonify(new_state.to_dict()), 201)
-    if request.method == "GET"
+    if request.method == "GET":
         res = storage.all(State).values()
         states = []
         for state in res:
