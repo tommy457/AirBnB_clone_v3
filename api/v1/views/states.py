@@ -12,7 +12,7 @@ from models import storage
 def get_create_states():
     """retrieve  states objects from storage"""
     if request.method == "POST":
-        data = request.get_json(silent=True)
+        data = request.get_json()
         if data is None:
             abort(400, "Not a JSON")
 
@@ -44,7 +44,7 @@ def get_delete_update_states_id(state_id):
         return make_response(jsonify({}))
 
     elif request.method == "PUT":
-        data = request.get_json(silent=True)
+        data = request.get_json()
         if data is None:
             abort(400, "Not a JSON")
         keys = ["id", "created_at", "updated_at"]
@@ -54,7 +54,6 @@ def get_delete_update_states_id(state_id):
                 setattr(state, key, value)
         storage.save()
         updated_state = state.to_dict()
-        storage.save()
         return make_response(jsonify(updated_state))
 
     return make_response(jsonify(state.to_dict()), 200)
