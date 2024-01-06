@@ -21,14 +21,14 @@ def get_create_states():
 
         new_state = State(**data)
         new_state.save()
-
+    
         return make_response(jsonify(new_state.to_dict()), 201)
-
-    res = storage.all(State).values()
-    states = []
-    for state in res:
-        states.append(state.to_dict())
-    return make_response(jsonify(states), 200)
+    if request.method == "GET"
+        res = storage.all(State).values()
+        states = []
+        for state in res:
+            states.append(state.to_dict())
+        return make_response(jsonify(states), 200)
 
 
 @app_views.route("/states/<state_id>", methods=["GET", "DELETE", "PUT"])
@@ -43,7 +43,7 @@ def get_delete_update_states_id(state_id):
         storage.save()
         return make_response(jsonify({}))
 
-    elif request.method == "PUT":
+    if request.method == "PUT":
         data = request.get_json()
         if data is None:
             abort(400, "Not a JSON")
@@ -56,4 +56,5 @@ def get_delete_update_states_id(state_id):
         updated_state = state.to_dict()
         return make_response(jsonify(updated_state))
 
-    return make_response(jsonify(state.to_dict()), 200)
+    if request.method == "GET":
+        return make_response(jsonify(state.to_dict()), 200)
