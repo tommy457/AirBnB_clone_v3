@@ -3,7 +3,7 @@
 States endpoints
 """
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from models.state import State
 from models import storage
 
@@ -22,13 +22,13 @@ def get_create_states():
         new_state = State(**data)
         new_state.save()
 
-        return jsonify(new_state.to_dict()), 201
+        return make_response(jsonify(new_state.to_dict()), 201)
 
     res = storage.all(State).values()
     states = []
     for state in res:
         states.append(state.to_dict())
-    return jsonify(states), 200
+    return make_response(jsonify(states), 200)
 
 
 @app_views.route("/states/<state_id>", methods=["GET", "DELETE", "PUT"])
@@ -41,7 +41,7 @@ def get_delete_update_states_id(state_id):
     if request.method == "DELETE":
         storage.delete(state)
         storage.save()
-        return jsonify({})
+        return make_response(jsonify({}))
 
     elif request.method == "PUT":
         data = request.get_json(silent=True)
@@ -55,6 +55,6 @@ def get_delete_update_states_id(state_id):
         storage.save()
         updated_state = state.to_dict()
         storage.save()
-        return jsonify(updated_state)
+        return make_response(jsonify(updated_state))
 
-    return jsonify(state.to_dict()), 200
+    return make_response(jsonify(state.to_dict()), 200)
