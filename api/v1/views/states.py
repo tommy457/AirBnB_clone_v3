@@ -13,10 +13,10 @@ def get_create_states():
     """retrieve  states objects from storage"""
     if request.method == "POST":
         data = request.get_json(silent=True)
-        if not data:
+        if data is None:
             abort(400, "Not a JSON")
 
-        if not data.get("name"):
+        if data.get("name") is None:
             abort(400, "Missing name")
 
         new_state = State(**data)
@@ -45,7 +45,7 @@ def get_delete_update_states_id(state_id):
 
     elif request.method == "PUT":
         data = request.get_json(silent=True)
-        if not data:
+        if data is None:
             abort(400, "Not a JSON")
         keys = ["id", "created_at", "updated_at"]
 
