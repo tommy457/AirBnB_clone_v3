@@ -33,6 +33,9 @@ def place_by_city_id(city_id):
         if storage.get(User, user_id) is None:
             abort(404)
 
+        if data.get("text") is None:
+            abor(400, 'Missing text')
+
         new_place = Place(**data)
         new_place.city_id = city_id
         new_place.user_id = user_id
