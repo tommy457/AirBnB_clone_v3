@@ -53,5 +53,5 @@ def get_delet_update_cities(city_id):
         for key, value in data.items():
             if key not in keys:
                 setattr(city, key, value)
-
+        storage.save()
     return jsonify(city.to_dict()), 200
