@@ -9,7 +9,6 @@ from models.user import User
 from models import storage
 
 
-
 @app_views.route("/users", methods=["GET", "POST"])
 def get_create_users():
     """retrieve or create users objects from storage"""
