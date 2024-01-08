@@ -75,13 +75,13 @@ def get_delet_update_places(place_id):
 def places_search():
     """retrieves all Place objects depending the body of the request."""
     data = request.get_json(silent=True)
+    if data is None:
+        abort(400, "Not a JSON")
+
     places = storage.all(Place).values()
     states_ids = data.get("states")
     cities_ids = data.get("cities")
     amenities_id = data.get("amenities")
-
-    if data is None:
-        abort(400, "Not a JSON")
 
     if len(data) == 0 or ((states_ids is [] or states_ids is None) and
                           (cities_ids is [] or cities_ids is None) and
