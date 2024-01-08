@@ -4,7 +4,9 @@ Places endpoints
 """
 from api.v1.views import app_views
 from flask import jsonify, abort, request
+from models.amenity import Amenity
 from models.city import City
+from models.state import State
 from models.place import Place
 from models.user import User
 from models import storage
@@ -67,3 +69,45 @@ def get_delet_update_places(place_id):
         storage.save()
 
     return jsonify(place.to_dict()), 200
+
+
+@app_views.route("/places_search", methods=["POST"])
+def places_search():
+    """retrieves all Place objects depending the body of the request."""
+    data = request.get_json(silent=True)
+    places = storage.all(Place).values()
+    states_ids = data.get("states")
+    cities_ids = data.get("cities")
+    amenities_id = data.get("amenities")
+
+    if data is None:
+        abort(400, "Not a JSON")
+
+    if len(data) == 0 or ((states_ids is [] or states_ids is None) and
+                          (cities_ids is [] or cities_ids is None) and
+                          amenities_id is [] or amenities_id is None):
+        places_list = [place.to_dict() for place in places]
+        return jsonify(places_list), 200
+
+    if states_ids is not [] or cities_ids is not []:
+        states = [storage.get(State, state_id) for state_id in states_ids]
+        cities_ny_state = [city for state in states for city in state.cities]
+
+        cities = [storage.get(City, city_id) for city_id in cities_ids]
+
+        cities = cities.extend(cities_ny_state)
+        if cities:
+            cities = set(cities)
+            cities_list = [city.to_dict() for city in cities]
+
+            return jsonify(cities_list), 200
+        return jsonify({})
+
+    if amenities_id is not []:
+
+        amenities_count = storage.count(Amenity)
+        places = [place.to_dict()
+                  for place in places
+                  if len(place.amenities) == amenities_count
+                  ]
+        return jsonify(places), 200
