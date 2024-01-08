@@ -83,13 +83,7 @@ def places_search():
     cities_ids = data.get("cities")
     amenities_id = data.get("amenities")
 
-    if len(data) == 0 or ((states_ids is [] or states_ids is None) and
-                          (cities_ids is [] or cities_ids is None) and
-                          amenities_id is [] or amenities_id is None):
-        places_list = [place.to_dict() for place in places]
-        return jsonify(places_list), 200
-
-    if amenities_id is not []:
+    if amenities_id:
         amenities_count = storage.count(Amenity)
         places = [place.to_dict()
                   for place in places
@@ -97,7 +91,7 @@ def places_search():
                   ]
         return jsonify(places), 200
 
-    if states_ids is not [] or cities_ids is not []:
+    if states_ids or cities_ids:
         states = [storage.get(State, state_id) for state_id in states_ids]
         cities_ny_state = [city for state in states for city in state.cities]
 
@@ -109,4 +103,7 @@ def places_search():
             cities_list = [city.to_dict() for city in cities]
 
             return jsonify(cities_list), 200
-        return jsonify({})
+        return jsonify(cities)
+
+    places_list = [place.to_dict() for place in places]
+    return jsonify(places_list), 200
