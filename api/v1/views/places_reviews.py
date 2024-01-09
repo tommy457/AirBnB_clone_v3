@@ -19,7 +19,6 @@ def review_by_place_id(place_id):
 
     if request.method == "POST":
         data = request.get_json(silent=True)
-        user_id = data.get("user_id")
 
         if data is None:
             abort(400, 'Not a JSON')
@@ -27,6 +26,7 @@ def review_by_place_id(place_id):
         if user_id is None:
             abort(400, 'Missing user_id')
 
+        user_id = data.get("user_id")
         if storage.get(User, user_id) is None:
             abort(404)
 

@@ -21,7 +21,6 @@ def place_by_city_id(city_id):
 
     if request.method == "POST":
         data = request.get_json(silent=True)
-        user_id = data.get("user_id")
 
         if data is None:
             abort(400, 'Not a JSON')
@@ -29,6 +28,7 @@ def place_by_city_id(city_id):
         if data.get("name") is None:
             abort(400, 'Missing name')
 
+        user_id = data.get("user_id")
         if user_id is None:
             abort(400, 'Missing user_id')
 
